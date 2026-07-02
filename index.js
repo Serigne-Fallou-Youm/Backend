@@ -21,7 +21,7 @@ connectDB();
 
 app.use(cors({
     origin: [
-       "https://front-node-xi.vercel.app",
+       "https://front-node-flame.vercel.app/",
         "http://localhost:5173"     
     ]
 }));
