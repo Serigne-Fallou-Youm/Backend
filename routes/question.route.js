@@ -1,50 +1,61 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const authMiddleware = require('../middlewares/user.middleware');
+const authMiddleware = require("../middlewares/user.middleware");
 
 const {
-    createQuestion,
-    getAllQuestions,
-    getQuestionById,
-    deleteQuestion,
-    voteQuestion,
-    getByTag,
-    searchQuestions,
-    markBestAnswer
-} = require('../controller/question.controller');
-
+  createQuestion,
+  getAllQuestions,
+  getQuestionById,
+  updateQuestion,
+  deleteQuestion,
+  likeQuestion,
+  dislikeQuestion,
+  getByTag,
+  searchQuestions,
+  markBestAnswer,
+} = require("../controller/question.controller");
 
 // ======================
-// IMPORTANT: routes spécifiques AVANT /:id
+// ROUTES SPÉCIFIQUES
 // ======================
 
-// search
-router.get('/search', searchQuestions);
+// Rechercher une question
+router.get("/search", searchQuestions);
 
-// tag
-router.get('/tag/:tag', getByTag);
+// Questions par tag
+router.get("/tag/:tag", getByTag);
 
-// create
-router.post('/', authMiddleware, createQuestion);
+// Liste des questions
+router.get("/", getAllQuestions);
 
-// list
-router.get('/', getAllQuestions);
+// Détail d'une question
+router.get("/:id", getQuestionById);
 
-// detail
-router.get('/:id', getQuestionById);
+// ======================
+// ROUTES PROTÉGÉES
+// ======================
 
-// delete
-router.delete('/:id', authMiddleware, deleteQuestion);
+// Créer une question
+router.post("/", authMiddleware, createQuestion);
 
-// vote
-router.patch('/:id/vote', authMiddleware, voteQuestion);
+// Modifier une question
+router.put("/:id", authMiddleware, updateQuestion);
 
-// best answer
+// Supprimer une question
+router.delete("/:id", authMiddleware, deleteQuestion);
+
+// Like
+router.patch("/:id/like", authMiddleware, likeQuestion);
+
+// Dislike
+router.patch("/:id/dislike", authMiddleware, dislikeQuestion);
+
+// Définir la meilleure réponse
 router.patch(
-    '/:questionId/best/:answerId',
-    authMiddleware,
-    markBestAnswer
+  "/:questionId/best/:answerId",
+  authMiddleware,
+  markBestAnswer
 );
 
 module.exports = router;

@@ -278,27 +278,21 @@ exports.getProfile = async (req,res)=>{
 
 
 
+// Calcul des likes reçus
 
-        // Calcul des votes
+let totalVotes = 0;
 
-        let totalVotes = 0;
+// Likes reçus sur les questions
+questions.forEach((question) => {
+    totalVotes += question.likes.length;
+});
 
-
-
-        questions.forEach(question=>{
-
-            totalVotes += question.votes;
-
-        });
-
-
-
-
-        answers.forEach(answer=>{
-
-            totalVotes += answer.votes;
-
-        });
+// Si ton modèle Answer possède aussi des likes
+answers.forEach((answer) => {
+    if (answer.likes) {
+        totalVotes += answer.likes.length;
+    }
+});
 
 
 

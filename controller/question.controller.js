@@ -138,9 +138,10 @@ exports.deleteQuestion = async (req, res) => {
 };
 
 // ======================
-// VOTE QUESTION
 // ======================
-exports.voteQuestion = async (req, res) => {
+// LIKE QUESTION
+// ======================
+exports.likeQuestion = async (req, res) => {
   try {
     const question = await Question.findById(req.params.id);
 
@@ -150,13 +151,28 @@ exports.voteQuestion = async (req, res) => {
       });
     }
 
-    question.votes = (question.votes || 0) + 1;
+    const userId = req.user.id;
+
+    // Retirer le dislike si présent
+    question.dislikes = question.dislikes.filter(
+      (id) => id.toString() !== userId
+    );
+
+    // Ajouter ou retirer le like
+    if (question.likes.includes(userId)) {
+      question.likes = question.likes.filter(
+        (id) => id.toString() !== userId
+      );
+    } else {
+      question.likes.push(userId);
+    }
 
     await question.save();
 
     res.json({
-      message: "Vote ajouté",
-      votes: question.votes,
+      message: "Like mis à jour",
+      likes: question.likes.length,
+      dislikes: question.dislikes.length,
     });
   } catch (error) {
     res.status(500).json({
@@ -165,6 +181,48 @@ exports.voteQuestion = async (req, res) => {
   }
 };
 
+// ======================
+// DISLIKE QUESTION
+// ======================
+exports.dislikeQuestion = async (req, res) => {
+  try {
+    const question = await Question.findById(req.params.id);
+
+    if (!question) {
+      return res.status(404).json({
+        message: "Question introuvable",
+      });
+    }
+
+    const userId = req.user.id;
+
+    // Retirer le like si présent
+    question.likes = question.likes.filter(
+      (id) => id.toString() !== userId
+    );
+
+    // Ajouter ou retirer le dislike
+    if (question.dislikes.includes(userId)) {
+      question.dislikes = question.dislikes.filter(
+        (id) => id.toString() !== userId
+      );
+    } else {
+      question.dislikes.push(userId);
+    }
+
+    await question.save();
+
+    res.json({
+      message: "Dislike mis à jour",
+      likes: question.likes.length,
+      dislikes: question.dislikes.length,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 // ======================
 // BEST ANSWER
 // ======================
