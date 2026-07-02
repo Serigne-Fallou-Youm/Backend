@@ -190,20 +190,13 @@ exports.connexion = async (req,res)=>{
 
 
 
-    }catch(error){
+    }catch (error) {
+    console.error("Erreur inscription :", error);
 
-
-        console.log(error);
-
-
-        res.status(500).json({
-
-            message:"Erreur serveur"
-
-        });
-
-
-    }
+    res.status(500).json({
+        message: error.message
+    });
+}
 
 
 };
