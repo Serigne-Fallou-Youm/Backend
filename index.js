@@ -20,10 +20,13 @@ connectDB();
 // ======================
 
 app.use(cors({
-    origin: [
-       "https://front-node-xi.vercel.app",
-        "http://localhost:5173"     
-    ]
+  origin: [
+    "http://localhost:5173",
+    "https://front-node-xi.vercel.app",
+    "https://front-node-flame.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
 
 app.use(express.json());
