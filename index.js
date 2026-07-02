@@ -22,7 +22,6 @@ connectDB();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://front-node-xi.vercel.app",
     "https://front-node-flame.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
